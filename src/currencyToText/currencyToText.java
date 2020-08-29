@@ -5,7 +5,7 @@ import java.io.*;
 public class currencyToText
 {
 	private static final String EMPTY = "";
-	// When number is 1 to 19
+	// When number is between 1 to 19
 	private static final String[] X ={ EMPTY, "One", "Two", "Three", "Four", "Five", "Six",
 	"Seven ", "Eight ", "Nine", "Ten", "Eleven","Twelve",
 	"Thirteen ", "Fourteen ", "Fifteen ", "Sixteen ",
@@ -18,40 +18,33 @@ public class currencyToText
 	private static String convertToDigit(int n, String suffix)
 	{
 		if (n == 0)
-		{
 			return EMPTY;
-		}
-
+		
 		if (n > 19)
-		{
 			return Y[n / 10] + X[n % 10] + suffix;
-		}
+		
 		else
-		{
 			return X[n] + suffix;
-		}
 	}
 
-	public static String convert(int n)
+	public static String convert(int n, int fractional)
 	{
-		if(n == 0)
-			return("Zero");
+		if(n == 0 & fractional == 0 ) // when number and fraction both are zero
+			return("Rs. Zero Only");
 		
-		else if( n < 0 )
+		else if( n < 0 ) //Minus values as we are talking currency
 			return("Negative Numbers not allowed");
 		
 		/*  because the limit is 999999.99, 
 			We can simply remove this  else if section below to extend the limit */
+		
 		else if ( n > 999999.99 )  
-			return("Reached Max Value");
+			return(" Reached Max Value");
 		
 		
 		StringBuilder res = new StringBuilder();
-	
 		res.append(convertToDigit(((n / 100000) % 100), " Lakh, "));
-	
 		res.append(convertToDigit(((n / 1000) % 100), " Thousand "));
-	
 		res.append(convertToDigit(((n / 100) % 10), " Hundred "));
 	
 		if ((n > 100) && (n % 100 != 0))
@@ -60,9 +53,16 @@ public class currencyToText
 		}
 	
 		res.append(convertToDigit((n % 100), ""));
-		String temp = res.toString();
-		return temp;
+		String word = res.toString();
 		
+		String temp;
+			if (fractional == 0)
+				temp = (" Rs.  " + word + " Only" ) ;
+				
+			else
+				temp = (" Rs. " + word  + " " + fractional + "/100" + " only");
+			
+			return temp;		
 	}
 
 		public static void main(String[] args)
@@ -82,7 +82,7 @@ public class currencyToText
 			n = (int)Math.round(doubleValue);
 			
 			/* we use the Math.round method to get the number before the fraction, 
-			as it will round up the integer if fraction is above 50 We use the bellow statement 
+			as it will round up the integer, if fraction is above 50 We use the bellow statement 
 			 to get the original number */
 			
 			if (fractional > 50)
@@ -90,14 +90,9 @@ public class currencyToText
 			
 			//when there is no fraction used, we don't need fractional/100 See the below statement
 			
-			
-			if (fractional == 0)
-			{
-				System.out.println(" Rs.  " + convert(n) + " Only" ) ;
-				
-			}
-			else
-				System.out.println(" Rs. " + convert(n)  + " " + fractional + "/100" + " only");
+			String temp = convert(n,fractional);
+			System.out.println(temp);
+	
 		}
 }
 
