@@ -86,7 +86,7 @@ public class currencyToText
 			as it will round up the integer, if fraction is above 50 We use the bellow statement
 			 to get the original number */
 
-			if (fractional < 9)
+			if (fractional <= 9)
 				fractional = fractional * 10;
 
 			if (fractional >= 50)
